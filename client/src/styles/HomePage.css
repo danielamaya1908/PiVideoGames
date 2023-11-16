@@ -1,0 +1,139 @@
+.home-page {
+  width: 97%;
+  height: 82.9vh;
+  padding: 20px;
+  background-image: url('../img/LandingPage.webp'); /* Ruta relativa a la ubicación del archivo CSS */
+  background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+  background-position: center; /* Centra la imagen en el contenedor */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-color: #f5f5f5; /* Gris claro */
+}
+
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  margin-block-end: 1px;
+}
+
+.search-bar input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex-grow: 1;
+  margin-bottom: 10px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.filter-buttons,
+.sort-buttons {
+  margin-bottom: 20px;
+}
+
+.filter-buttons button,
+.sort-buttons button {
+  margin-right: 10px;
+}
+
+.filter-dropdown {
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.game-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: calc(33.33% - 20px);
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.game-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.game-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.game-card p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.game-card a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.game-card a:hover {
+  text-decoration: underline;
+}
+
+.create-button {
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  padding: 10px 20px;
+  display: inline-block;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.button--- {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  margin-top: 10px;
+}
+
+
+.down-arrow-icon::before {
+  content: '\2193'; /* Código unicode para una flecha hacia abajo */
+  display: inline-block;
+  margin-right: 3px; /* Espacio entre el ícono y el texto */
+}
+.toggle-filters,
+.toggle-sort {
+  margin-right: 5px; /* Ajusta este valor según tu preferencia */
+}
+
+.search {
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  padding: 10px 20px;
+  display: inline-block;
+  border-radius: 4px;
+  border-color: #007bff;
+}

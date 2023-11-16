@@ -1,0 +1,26 @@
+.landing-page {
+  background-image: url('../img/LandingPage.webp ');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+
+.landing-page h2 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.landing-page button {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

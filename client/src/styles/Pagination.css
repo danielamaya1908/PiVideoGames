@@ -1,0 +1,21 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .page-numbers {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .page-numbers li {
+    display: inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .page-numbers li.active {
+    font-weight: bold;
+  }
+  
