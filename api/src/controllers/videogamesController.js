@@ -11,7 +11,7 @@ const getVideoGames = async (req, res) => {
     const response = await axios.get(apiUrl, {
       params: {
         key: RAWG_API_KEY,
-        page_size: 100
+        page_size: 1000
       }
     });
     
@@ -70,7 +70,7 @@ const searchVideoGamesByName = async (req, res) => {
         },
         origin: 'Database' // Filtro para juegos de la base de datos local
       },
-      limit: 100
+      limit: 500
     });
 
     // Buscar en la API
@@ -89,11 +89,11 @@ const searchVideoGamesByName = async (req, res) => {
 
     res.json({ results: [...videoGamesFromDB, ...videoGamesFromAPI] });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message});
   }
 };
 
-const createVideoGame = async (req, res) => {
+/* const createVideoGame = async (req, res) => {
   console.log(req.body);
   const { name, description, platforms, genres } = req.body;
 
@@ -120,7 +120,42 @@ const createVideoGame = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+}; */
+
+const createVideoGame = async (req, res) => {
+  console.log(req.body);
+  const { name, description, platforms, genres, background_image, releaseDate, rating } = req.body;
+
+  try {
+    // Verificar que se proporcionen al menos un género
+    if (!genres || genres.length === 0) {
+      return res.status(400).json({ message: "Se necesita al menos un género." });
+    }
+
+    // Crear el videojuego en la base de datos con los campos adicionales
+    const videoGame = await Videogame.create({
+      id: uuidv4(), // Genera un nuevo UUID
+      name,
+      description,
+      platforms,
+      background_image, // Asignar la URL de la imagen desde req.body
+      releaseDate, // Asignar la fecha de lanzamiento
+      rating, // Asignar la calificación
+      origin: 'Database', // Establecer el origen como 'Database' para juegos creados localmente
+      // Asegúrate de incluir cualquier otro campo que sea necesario
+    });
+
+    // Asociar los géneros al videojuego
+    await videoGame.addGenres(genres);
+
+    res.json(videoGame);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
+
+
+
 
 module.exports = {
   getVideoGames,

@@ -29,6 +29,7 @@ const FilterOptions = ({ handleFilter }) => {
     handleFilter(selectedGenre, value);
   };
 
+  
   return (
     <div>
       <h3>Filtrar por:</h3>
@@ -51,8 +52,8 @@ const FilterOptions = ({ handleFilter }) => {
         Origen:
         <select value={selectedOrigin} onChange={(e) => handleOriginFilter(e.target.value)}>
           <option value="">Todos</option>
-          <option value="API">API</option>
-          <option value="Database">Base de datos</option>
+          <option value="api">API</option>
+          <option value="database">Base de datos</option>
         </select>
       </label>
     </div>

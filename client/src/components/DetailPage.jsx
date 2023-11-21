@@ -83,7 +83,7 @@
 //  );
 //  };
 //export default Detail;
-import React, { useEffect } from "react";
+/* import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getGameById } from '../actions/action';
@@ -133,6 +133,145 @@ const Detail = () => {
             {game.genres?.map((genre, index) => <li key={index}>{genre}</li>)}
           </ul>
         </div>
+      </div>
+    </div>
+  );
+};
+
+export default Detail; */
+
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getGameById } from '../actions/action';
+import style from "../styles/DetailPage.css"; // Asegúrate de que este import corresponda a la ubicación de tu archivo CSS
+
+const Detail = () => {
+  const { id } = useParams();
+  const game = useSelector((state) => state.videoGameDetails);
+  const loading = useSelector((state) => state.loading);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getGameById(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    console.log("Respuesta de la API:", game); // Agregamos un console.log aquí
+  }, [game]);
+  
+  if (loading) {
+    return (
+      <div className={style.loadercontainer}>
+        <div className={style.spinner}></div>
+      </div>
+    );
+  }
+
+  if (!game) {
+    return <p className="error-message">No se encontraron detalles del juego.</p>;
+  }
+
+  return (
+    <div className="detail-container">
+      <h1>ID {game.id} - {game.name}</h1>
+      <img className="detail-image" src={game.background_image || game.image} alt={game.name} />
+      <div>
+        <h2>Released: {game.releaseDate}</h2>
+        <h2>Rating: {game.rating}</h2>
+        <p dangerouslySetInnerHTML={{ __html: game.description_raw }}></p>
+
+        {/* {<div className="platforms">
+          <strong>Platforms:</strong>
+          <ul>
+            {game.platforms?.map((platform, index) => <li key={index}>{platform}</li>)}
+          </ul>
+        </div>} */}
+{Array.isArray(game.platforms) ? (
+  <div className="platforms">
+    <strong>Platforms:</strong>
+    <ul>
+      {game.platforms.map((platform, index) => <li key={index}>{platform}</li>)}
+    </ul>
+  </div>
+) : (
+  <div>
+    {game.platforms && (
+      <div>
+        <strong>Platforms:</strong>
+        <ul>
+          <li>{game.platforms}</li>
+        </ul>
+      </div>
+    )}
+    {!game.platforms && <div>No platforms available</div>}
+  </div>
+)}
+{
+  Array.isArray(game.genres) ? (
+    <div className="genres">
+      <strong>Genres:</strong>
+      <ul>
+        {game.genres.map((genre, index) => (
+          <li key={index}>{typeof genre === 'string' ? genre : genre.name}</li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <div>
+      {game.genres ? (
+        <div>
+          {typeof game.genres === 'string' ? (
+            <div className="genres">
+              <strong>Genres:</strong>
+              <ul>
+                <li>{game.genres}</li>
+              </ul>
+            </div>
+          ) : (
+            <div>
+              {game.genres.name && (
+                <div className="genres">
+                  <strong>Genres:</strong>
+                  <ul>
+                    <li>{game.genres.name}</li>
+                  </ul>
+                </div>
+              )}
+              {!game.genres.name && <div>No genres available</div>}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>No genres available</div>
+      )}
+    </div>
+  )
+}
+
+
+       {/*  {<div className="genres">
+          <strong>Genres:</strong>
+          <ul>
+            {game.genres?.map((genre, index) => <li key={index}>{genre}</li>)}
+          </ul>
+        </div>} */}
+{/* {
+  <div className="platforms">
+    <strong>Platforms:</strong>
+    <ul>
+      <li>{game.platforms?.name}</li>
+    </ul>
+  </div>
+}
+{
+  <div className="genres">
+    <strong>Genres:</strong>
+    <ul>
+      <li>{game.genres?.name}</li>
+    </ul>
+  </div>
+} */}
       </div>
     </div>
   );

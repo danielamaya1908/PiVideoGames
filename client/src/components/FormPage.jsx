@@ -13,7 +13,7 @@ const FormPage = () => {
   const [formData, setFormData] = useState({
     id: uuidv4(), // Genera un nuevo UUID para el videojuego
     name: '',
-    image: '',
+    background_image: '',
     description: '',
     platforms: '',
     releaseDate: '',
@@ -61,7 +61,7 @@ const FormPage = () => {
       setFormData({
         id: uuidv4(), // Genera un nuevo UUID para el próximo videojuego
         name: '',
-        image: '',
+        background_image: '',
         description: '',
         platforms: '',
         releaseDate: '',
@@ -94,8 +94,8 @@ const FormPage = () => {
           <label>Imagen:</label>
           <input
             type="text"
-            name="image"
-            value={formData.image}
+            name="background_image"
+            value={formData.background_image}
             onChange={handleChange}
             required
           />

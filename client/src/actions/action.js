@@ -53,7 +53,7 @@ export const fetchVideoGameDetailsError = (error) => ({
   payload: error,
 });
 
-export const fetchVideoGameDetails = (id) => {
+/* export const fetchVideoGameDetails = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
@@ -62,7 +62,31 @@ export const fetchVideoGameDetails = (id) => {
       dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
     }
   };
+}; */
+
+export const fetchVideoGameDetails = (id) => {
+  return async (dispatch) => {
+    try {
+      // Primero intenta obtener los detalles del juego desde la base de datos local
+      const localResponse = await axios.get(`http://localhost:3001/videogames/${id}`);
+      
+      // Si encuentra los detalles en la base local, los envía a través de la acción fetchVideoGameDetailsSuccess
+      dispatch(fetchVideoGameDetailsSuccess(localResponse.data));
+    } catch (localError) {
+      try {
+        // Si hay un error al buscar en la base local, intenta obtener los detalles desde la API externa
+        const externalResponse = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
+        
+        // Si encuentra los detalles en la API externa, los envía a través de la acción fetchVideoGameDetailsSuccess
+        dispatch(fetchVideoGameDetailsSuccess(externalResponse.data));
+      } catch (externalError) {
+        // Si hay un error al obtener los detalles tanto de la base local como de la API externa, se envía un mensaje de error
+        dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
+      }
+    }
+  };
 };
+
 
 export const setFilter = (filter) => ({
   type: SET_FILTER,
@@ -73,7 +97,7 @@ export const removeFilter = () => ({
   type: REMOVE_FILTER,
 });
 
-export const getGameById = (id) => {
+/* export const getGameById = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
@@ -82,4 +106,28 @@ export const getGameById = (id) => {
       dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
     }
   };
+}; */
+
+export const getGameById = (id) => {
+  return async (dispatch) => {
+    try {
+      // Primero intenta obtener los detalles del juego desde la base de datos local
+      const localResponse = await axios.get(`http://localhost:3001/videogames/${id}`);
+      
+      // Si encuentra los detalles en la base local, los envía a través de la acción fetchVideoGameDetailsSuccess
+      dispatch(fetchVideoGameDetailsSuccess(localResponse.data));
+    } catch (localError) {
+      try {
+        // Si hay un error al buscar en la base local, intenta obtener los detalles desde la API externa
+        const externalResponse = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
+        
+        // Si encuentra los detalles en la API externa, los envía a través de la acción fetchVideoGameDetailsSuccess
+        dispatch(fetchVideoGameDetailsSuccess(externalResponse.data));
+      } catch (externalError) {
+        // Si hay un error al obtener los detalles tanto de la base local como de la API externa, se envía un mensaje de error
+        dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
+      }
+    }
+  };
 };
+
