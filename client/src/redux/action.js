@@ -53,17 +53,6 @@ export const fetchVideoGameDetailsError = (error) => ({
   payload: error,
 });
 
-/* export const fetchVideoGameDetails = (id) => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
-      dispatch(fetchVideoGameDetailsSuccess(response.data));
-    } catch (error) {
-      dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
-    }
-  };
-}; */
-
 export const fetchVideoGameDetails = (id) => {
   return async (dispatch) => {
     try {
@@ -96,17 +85,6 @@ export const setFilter = (filter) => ({
 export const removeFilter = () => ({
   type: REMOVE_FILTER,
 });
-
-/* export const getGameById = (id) => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.get(`https://videogames-production-74c6.up.railway.app/videogames/${id}`);
-      dispatch(fetchVideoGameDetailsSuccess(response.data));
-    } catch (error) {
-      dispatch(fetchVideoGameDetailsError('Error fetching video game details.'));
-    }
-  };
-}; */
 
 export const getGameById = (id) => {
   return async (dispatch) => {

@@ -1,8 +1,7 @@
-// genresController.js
-
 const axios = require('axios');
-const { Genre } = require('../db');
+const { Genre } = require('../db');// Importa el modelo Genre desde la base de datos
 
+// URL de la API RAWG para obtener información sobre géneros de videojuegos
 const RAWG_API_URL = 'https://api.rawg.io/api/genres?key=207165f07e604ef0b7298e8d2f6ecae8';
 
 const getGenres = async (req, res) => {
@@ -29,7 +28,6 @@ const getGenres = async (req, res) => {
     res.json(genres);
 
   } catch (error) {
-    console.log(error);
     res.status(500).json({message: error.message});  
   }
 

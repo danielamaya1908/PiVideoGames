@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('../img/LandingPage.webp');
+  background-image: url('../../img/LandingPage.webp');
   background-size: cover;
 }
 

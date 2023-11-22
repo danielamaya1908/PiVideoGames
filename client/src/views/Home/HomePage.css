@@ -2,7 +2,7 @@
   width: 97%;
   height: 82.9vh;
   padding: 20px;
-  background-image: url('../img/LandingPage.webp'); /* Ruta relativa a la ubicación del archivo CSS */
+  background-image: url('../../img/LandingPage.webp');
   background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
   background-position: center; /* Centra la imagen en el contenedor */
   background-repeat: no-repeat; /* Evita que la imagen se repita */

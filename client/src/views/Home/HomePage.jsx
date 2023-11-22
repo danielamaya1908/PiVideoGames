@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import SearchBar from './SearchBar';
-import GameCard from './GameCard';
-import FilterOptions from './FilterOptions';
-import Pagination from './Pagination'; 
-import '../styles/HomePage.css';
+import SearchBar from '../../components/Search/SearchBar';
+import GameCard from '../../components/GameCard/GameCard';
+import FilterOptions from '../../components/FilterOptions/FilterOptions';
+import Pagination from '../../components/Pagination/Pagination'; 
+import './HomePage.css';
 import { Link } from 'react-router-dom';
 
 const HomePage = () => {
@@ -21,100 +21,19 @@ const HomePage = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        // Cargar juegos de la API
-        const initialResponseAPI = await axios.get('http://localhost:3001/videogames', {
-          params: {
-            _page: 1, // Página de inicio para la paginación
-            _limit: 100, // Cantidad de juegos por página
-          }
-        });
-        const totalGames = initialResponseAPI.headers['x-total-count']; // Total de juegos en la API
-        const gamesFromAPI = initialResponseAPI.data.map(game => ({
-          ...game,
-          origin: 'API'
-        }));
-  
-        let remainingGames = totalGames - 100; // Juegos restantes por obtener
-  
-        // Si quedan más juegos, realiza las siguientes solicitudes
-        if (remainingGames > 0) {
-          let currentPage = 2; // Página actual para la siguiente solicitud
-  
-          while (remainingGames > 0) {
-            const nextPageResponse = await axios.get('http://localhost:3001/videogames', {
-              params: {
-                _page: currentPage,
-                _limit: remainingGames > 100 ? 100 : remainingGames, // Limita la cantidad de juegos para la última página
-              }
-            });
-            const nextPageGames = nextPageResponse.data.map(game => ({
-              ...game,
-              origin: 'API'
-            }));
-  
-            gamesFromAPI.push(...nextPageGames);
-            remainingGames -= 100;
-            currentPage++;
-          }
-        }
-  
-        // Cargar juegos de la base de datos local
-        const responseDB = await axios.get('http://localhost:3001/videogames?_limit=1000'); // Ruta para juegos de la base de datos local
-        console.log('Juegos de la base de datos local:', responseDB.data);
-        const gamesFromDB = responseDB.data.map(game => ({
-          ...game,
-          origin: 'Database'
-        }));
-  
-        // Identificar juegos duplicados y fusionar las listas
-        const combinedGames = gamesFromAPI.concat(
-          gamesFromDB.filter(dbGame => !gamesFromAPI.find(apiGame => apiGame.id === dbGame.id))
-        );
-  
-        setVideoGames(combinedGames);
-        setFilteredGames(combinedGames);
+        const response = await axios.get('http://localhost:3001/videogames?_limit=100');
+        const gamesWithOrigin = response.data.map(game => ({ ...game }));
+        setVideoGames(gamesWithOrigin);
+        setFilteredGames(gamesWithOrigin);
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     fetchInitialData();
   }, []);
   
-/*   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        // Cargar juegos de la API
-        const responseAPI = await axios.get('http://localhost:3001/videogames?_limit=100');
-        const gamesFromAPI = responseAPI.data.map(game => ({
-          ...game,
-          origin: 'API' // Añade el campo 'origin' a los juegos de la API
-        }));
-  
-        // Cargar juegos de la base de datos local
-        const responseDB = await axios.get('http://localhost:3001/videogames?_limit=100'); // Ruta para juegos de la base de datos local
-        console.log('Juegos de la base de datos local:', responseDB.data);
-        const gamesFromDB = responseDB.data.map(game => ({
-          ...game,
-          origin: 'Database' // Añade el campo 'origin' a los juegos de la base de datos local
-        }));
-  
-        // Identificar juegos duplicados y fusionar las listas
-        const combinedGames = gamesFromAPI.concat(
-          gamesFromDB.filter(dbGame => !gamesFromAPI.find(apiGame => apiGame.id === dbGame.id))
-        );
-  
-        setVideoGames(combinedGames);
-        setFilteredGames(combinedGames);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    fetchInitialData();
-  }, []); */
-  
-  
+  // Función para realizar la búsqueda de juegos por nombre
   const handleSearch = async (searchTerm) => {
     try {
       const response = await axios.get(`http://localhost:3001/videogames/name/${searchTerm}`);
@@ -126,6 +45,7 @@ const HomePage = () => {
     }
   };
 
+  // Función para filtrar juegos por género
   const handleFilter = (genreId) => {
     let filteredGames = videoGames;
     
@@ -136,10 +56,10 @@ const HomePage = () => {
       );
     }
   
-    console.log('handleFilter - genreId:', genreId, 'filteredGames:', filteredGames);
     return filteredGames;
   };
   
+  // Función para filtrar juegos por origen
   const handleOriginFilter = (origin) => {
     let filteredGames = videoGames;
   
@@ -150,13 +70,11 @@ const HomePage = () => {
       );
     }
   
-    console.log('handleOriginFilter - origin:', origin, 'filteredGames:', filteredGames);
     return filteredGames;
   };
   
+  // Función para aplicar filtros combinados por género y origen
   const handleCombinedFilter = (genreId, origin) => {
-    console.log('handleCombinedFilter - Starting filter with genreId:', genreId, 'and origin:', origin);
-  
     // Aplicar el filtro por género
     const filteredByGenre = handleFilter(genreId);
   
@@ -168,8 +86,6 @@ const HomePage = () => {
       filteredByOrigin.includes(game)
     );
   
-    console.log('handleCombinedFilter - Combined filteredGames:', combinedFilteredGames);
-  
     // Actualizar los juegos filtrados solo si hay algún filtro aplicado
     if (genreId || origin) {
       setFilteredGames(combinedFilteredGames);
@@ -180,6 +96,7 @@ const HomePage = () => {
   };
   
 
+  // Función para manejar el ordenamiento de juegos por nombre o rating
   const handleSort = (type) => {
     setSortBy(type);
     let sortedGames = [...filteredGames];
@@ -194,6 +111,7 @@ const HomePage = () => {
     setFilteredGames(sortedGames);
   };
 
+  // Función para manejar la dirección del ordenamiento
   const handleSortDirection = (direction) => {
     let sortedGames = [...filteredGames];
     if (sortBy === 'name') {
@@ -208,6 +126,7 @@ const HomePage = () => {
     setSortDirection(direction);
   };
 
+  // Lógica para la paginación de juegos
   const indexOfLastGame = currentPage * gamesPerPage;
   const indexOfFirstGame = indexOfLastGame - gamesPerPage;
   const currentGames = filteredGames.slice(indexOfFirstGame, indexOfLastGame);
@@ -242,16 +161,19 @@ const HomePage = () => {
           </button>
         </div>
       )}
+      {/* Botón para crear un nuevo videojuego */}
       <button className='button---'>
         <Link to="/form" className="create-button">Create New Videogame</Link>
       </button>
 
+      {/* Lista de tarjetas de juegos */}
       <div className="card-list">
-  {currentGames.map((game, index) => (
-    <GameCard key={`${game.id}_${index}`} game={game} />
-  ))}
-</div>
+        {currentGames.map((game, index) => (
+          <GameCard key={`${game.id}_${index}`} game={game} />
+        ))}
+      </div>
 
+      {/* Componente de paginación */}
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(filteredGames.length / gamesPerPage)}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/LandingPage';
-import HomePage from './components/HomePage';
-import Navbar from './components/Navbar';
-import FormPage from './components/FormPage';
-import DetailPage from './components/DetailPage';
-import About from './components/About';
+import LandingPage from './views/Landing/LandingPage';
+import HomePage from './views/Home/HomePage';
+import Navbar from './components/Navbar/Navbar';
+import FormPage from './views/CreateVideogame/FormPage';
+import DetailPage from './views/Detail/DetailPage';
+import About from './views/About/About';
 
 function App() {
   return (

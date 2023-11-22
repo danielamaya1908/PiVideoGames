@@ -4,7 +4,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    background-image: url('../img/LandingPage.webp'); /* Ruta relativa a la ubicación del archivo CSS */
+    background-image: url('../../img/LandingPage.webp'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

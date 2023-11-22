@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createVideoGame } from '../actions/action';
-import '../styles/FormPage.css';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
+import { createVideoGame } from '../../redux/action';
+import './FormPage.css';
+import { useNavigate } from 'react-router-dom'; // Importa el hook useNavigate de react-router-dom para la navegación programática
+import { v4 as uuidv4 } from 'uuid'; // Importa la función v4 de la librería UUID para generar identificadores únicos
 
 
 const FormPage = () => {
@@ -21,61 +21,71 @@ const FormPage = () => {
     genres: [],
   });
   
+   // Estado local para almacenar la lista de géneros disponibles
   const [genresList, setGenresList] = useState([]);
+
+  // Estado local para mostrar un mensaje de éxito al crear un videojuego
   const [successMessage, setSuccessMessage] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:3001/genres')
-      .then(response => response.json())
-      .then(data => setGenresList(data))
-      .catch(error => console.error('Error:', error));
-  }, []);
+ // Efecto para obtener la lista de géneros disponibles al cargar el componente
+ useEffect(() => {
+  fetch('http://localhost:3001/genres')
+    .then(response => response.json())
+    .then(data => setGenresList(data))
+    .catch(error => console.error('Error:', error));
+}, []);
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+// Función para manejar cambios en los inputs del formulario
+const handleChange = (e) => {
+  const { name, value, type } = e.target;
 
-    if (type === 'select-multiple') {
-      const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
-      setFormData({
-        ...formData,
-        [name]: selectedOptions,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formattedFormData = {
+  // Actualiza el estado según el tipo de input (maneja los select múltiples)
+  if (type === 'select-multiple') {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    setFormData({
       ...formData,
-      genres: formData.genres.map(Number),
-    };
-  
-    try {
-      await dispatch(createVideoGame(formattedFormData));
-      setSuccessMessage('Videojuego creado con éxito');
-      setFormData({
-        id: uuidv4(), // Genera un nuevo UUID para el próximo videojuego
-        name: '',
-        background_image: '',
-        description: '',
-        platforms: '',
-        releaseDate: '',
-        rating: 0,
-        genres: [],
-      });
-  
-      // Redirige al usuario a la página de inicio después de crear el videojuego
-      navigate('/home'); // Reemplaza con la ruta correcta
-    } catch (error) {
-      console.error('Error al crear el videojuego:', error);
-    }
+      [name]: selectedOptions,
+    });
+  } else {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+};
+
+// Función para manejar el envío del formulario
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const formattedFormData = {
+    ...formData,
+    genres: formData.genres.map(Number),
   };
-  
+
+  try {
+    // Envia la información del nuevo videojuego al servidor
+    await dispatch(createVideoGame(formattedFormData));
+    setSuccessMessage('Videojuego creado con éxito');
+    
+    // Resetea el formulario para agregar un nuevo videojuego
+    setFormData({
+      id: uuidv4(), // Genera un nuevo UUID para el próximo videojuego
+      name: '',
+      background_image: '',
+      description: '',
+      platforms: '',
+      releaseDate: '',
+      rating: 0,
+      genres: [],
+    });
+
+    // Redirige al usuario a la página de inicio después de crear el videojuego
+    navigate('/home');
+  } catch (error) {
+    console.error('Error al crear el videojuego:', error);
+  }
+};
+
 
   return (
     <div className="form-container">
