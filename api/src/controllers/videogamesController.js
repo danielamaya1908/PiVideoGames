@@ -26,20 +26,41 @@ const getVideoGames = async (req, res) => {
 
     // Obtener juegos de la API externa
     let videoGamesFromAPI = [];
-    const totalPages = 3; // Número de páginas para obtener los 100 juegos (50 por página)
+    const totalPages = 3; // Número de páginas para obtener los 100 juegos
+    const gamesPerPage = 33; // Número de juegos por página
+    const totalGamesDesired = 100; // Total de juegos a obtener
+    
     for (let page = 1; page <= totalPages; page++) {
+      let pageSize = gamesPerPage;
+    
+      // Si es la última página
+      if (page === totalPages) {
+        const remainingGames = totalGamesDesired - videoGamesFromAPI.length;
+        pageSize = remainingGames; // Ajustar el tamaño para obtener exactamente el número restante de juegos
+      }
+    
       const responseAPI = await axios.get(apiUrl, {
         params: {
           key: RAWG_API_KEY,
-          page_size: 33, // Número de juegos por página
+          page_size: pageSize,
           page: page
         }
       });
+    
       videoGamesFromAPI = [...videoGamesFromAPI, ...responseAPI.data.results.map(game => ({
         ...game,
         origin: 'API'
       }))];
+    
+      // Si ya se alcanzaron los 100 juegos, romper el ciclo
+      if (videoGamesFromAPI.length >= totalGamesDesired) {
+        break;
+      }
     }
+    
+    // Asegura tener exactamente 100 juegos
+    videoGamesFromAPI = videoGamesFromAPI.slice(0, totalGamesDesired);
+    
 
     // Combinar juegos de la base de datos local y de la API
     const combinedVideoGames = [...mappedVideoGamesFromDB, ...videoGamesFromAPI];
