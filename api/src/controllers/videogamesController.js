@@ -26,8 +26,8 @@ const getVideoGames = async (req, res) => {
 
     // Obtener juegos de la API externa
     let videoGamesFromAPI = [];
-    const totalPages = 3; // Número de páginas para obtener los 100 juegos
-    const gamesPerPage = 33; // Número de juegos por página
+    const totalPages = 5; // Número de páginas para obtener los 100 juegos
+    const gamesPerPage = 20; // Número de juegos por página
     const totalGamesDesired = 100; // Total de juegos a obtener
     
     for (let page = 1; page <= totalPages; page++) {
@@ -138,6 +138,7 @@ const searchVideoGamesByName = async (req, res) => {
   }
 };
 
+//crud
 const createVideoGame = async (req, res) => {
   const { name, description, platforms, genres, background_image, releaseDate, rating } = req.body;
 
@@ -169,9 +170,55 @@ const createVideoGame = async (req, res) => {
   }
 };
 
+
+const deleteVideoGame = async (req, res) => {
+  const idVideogame = req.params.idVideogame;
+
+  try {
+    const deletedGame = await Videogame.destroy({
+      where: {
+        id: idVideogame,
+        origin: 'Database' // Asegura que solo se eliminen juegos locales
+      }
+    });
+
+    if (deletedGame === 0) {
+      return res.status(404).json({ message: 'No se encontró el videojuego o no es posible eliminarlo' });
+    }
+
+    res.json({ message: 'Videojuego eliminado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateVideoGame = async (req, res) => {
+  const idVideogame = req.params.idVideogame;
+  const updatedData = req.body;
+
+  try {
+    const [updatedRowsCount] = await Videogame.update(updatedData, {
+      where: {
+        id: idVideogame,
+        origin: 'Database' // Asegura que solo se actualicen juegos locales
+      }
+    });
+
+    if (updatedRowsCount === 0) {
+      return res.status(404).json({ message: 'No se encontró el videojuego o no es posible actualizarlo' });
+    }
+
+    res.json({ message: 'Videojuego actualizado correctamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getVideoGames,
   getVideoGameById,
   searchVideoGamesByName,
-  createVideoGame
+  createVideoGame,
+  deleteVideoGame,
+  updateVideoGame
 };

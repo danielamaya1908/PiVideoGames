@@ -57,10 +57,10 @@ const Detail = () => {
         ) : (
           <div>
             {game.platforms && (
-              <div>
+              <div className="platforms">
                 <strong>Platforms:</strong>
                 <ul>
-                  <li>{game.platforms}</li>
+                  <ul>{game.platforms}</ul>
                 </ul>
               </div>
             )}
