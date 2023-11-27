@@ -1,21 +1,54 @@
+/* Estilos para el contenedor principal */
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  
-  .page-numbers {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .page-numbers li {
-    display: inline-block;
-    margin: 0 5px;
-    cursor: pointer;
-  }
-  
-  .page-numbers li.active {
-    font-weight: bold;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Estilos para las flechas */
+.pagination button {
+  background-color: yellow; /* Color amarillo */
+  color: black;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 3px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s; /* Transición suave */
+}
+
+.pagination button:hover {
+  background-color: #d9b100; /* Cambio de color al pasar el mouse */
+}
+
+.pagination button:active {
+  background-color: grey; /* Cambio de color al presionar */
+  color: white;
+}
+
+/* Estilos para los números de página */
+.page-numbers {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.page-numbers li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: #007bff;
+  color: white;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.page-numbers li.active {
+  background-color: #e0e0e0;
+  color: black;
+  font-weight: bold;
+}

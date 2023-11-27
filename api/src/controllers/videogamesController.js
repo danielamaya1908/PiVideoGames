@@ -1,17 +1,12 @@
-// Importación de módulos y configuraciones
-const axios = require('axios'); // Módulo para hacer solicitudes HTTP
-require('dotenv').config(); // Módulo para cargar variables de entorno desde un archivo .env
-const { Op } = require('sequelize'); // Operadores de Sequelize para consultas avanzadas
-const { v4: uuidv4 } = require('uuid'); // Generador de UUID (Identificadores Únicos Universales)
+const axios = require('axios');
+require('dotenv').config(); 
+const { Op } = require('sequelize');
+const { v4: uuidv4 } = require('uuid'); 
 
-// Configuración de acceso a la API RAWG
-const RAWG_API_KEY = process.env.RAWG_API_KEY; // Obtiene la clave de la API desde variables de entorno
-const apiUrl = 'https://api.rawg.io/api/games'; // URL base de la API RAWG para obtener información de videojuegos
+const RAWG_API_KEY = process.env.RAWG_API_KEY; 
+const apiUrl = 'https://api.rawg.io/api/games';
 
-// Importación de modelos de la base de datos (Genre y Videogame)
-const { Genre, Videogame } = require('../db'); // Importa los modelos de la base de datos definidos en '../db'
-
-
+const { Genre, Videogame } = require('../db'); 
 
 const getVideoGames = async (req, res) => {
   try {
@@ -26,9 +21,9 @@ const getVideoGames = async (req, res) => {
 
     // Obtener juegos de la API externa
     let videoGamesFromAPI = [];
-    const totalPages = 5; // Número de páginas para obtener los 100 juegos
-    const gamesPerPage = 20; // Número de juegos por página
-    const totalGamesDesired = 100; // Total de juegos a obtener
+    const totalPages = 5; 
+    const gamesPerPage = 20; 
+    const totalGamesDesired = 100; 
     
     for (let page = 1; page <= totalPages; page++) {
       let pageSize = gamesPerPage;
@@ -36,7 +31,7 @@ const getVideoGames = async (req, res) => {
       // Si es la última página
       if (page === totalPages) {
         const remainingGames = totalGamesDesired - videoGamesFromAPI.length;
-        pageSize = remainingGames; // Ajustar el tamaño para obtener exactamente el número restante de juegos
+        pageSize = remainingGames; 
       }
     
       const responseAPI = await axios.get(apiUrl, {
@@ -67,6 +62,30 @@ const getVideoGames = async (req, res) => {
     res.json(combinedVideoGames);
   } catch (error) {
     console.error('Error al obtener los videojuegos:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getNextPage = async (req, res) => {
+  const pageNumber = req.params.pageNumber;
+
+  try {
+    // Hacer la solicitud a la API con el número de página especificado
+    const responseAPI = await axios.get(apiUrl, {
+      params: {
+        key: RAWG_API_KEY,
+        page_size: gamesPerPage,
+        page: pageNumber
+      }
+    });
+
+    const videoGamesFromAPI = responseAPI.data.results.map(game => ({
+      ...game,
+      origin: 'API'
+    }));
+
+    res.json(videoGamesFromAPI);
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -115,7 +134,7 @@ const searchVideoGamesByName = async (req, res) => {
         },
         origin: 'Database' // Filtro para juegos de la base de datos local
       },
-      limit: 500
+      limit: 10
     });
 
     // Buscar en la API
@@ -148,20 +167,19 @@ const createVideoGame = async (req, res) => {
       return res.status(400).json({ message: "Se necesita al menos un género." });
     }
 
-    // Crear el videojuego en la base de datos con los campos adicionales
+    
     const videoGame = await Videogame.create({
-      id: uuidv4(), // Genera un nuevo UUID
+      id: uuidv4(), 
       name,
       description,
       platforms,
-      background_image, // Asignar la URL de la imagen desde req.body
-      releaseDate, // Asignar la fecha de lanzamiento
-      rating, // Asignar la calificación
-      origin: 'Database', // Establecer el origen como 'Database' para juegos creados localmente
-      // Asegúrate de incluir cualquier otro campo que sea necesario
+      background_image, 
+      releaseDate, 
+      rating, 
+      origin: 'Database',
     });
 
-    // Asociar los géneros al videojuego
+    
     await videoGame.addGenres(genres);
 
     res.json(videoGame);
@@ -171,14 +189,14 @@ const createVideoGame = async (req, res) => {
 };
 
 
-const deleteVideoGame = async (req, res) => {
+/* const deleteVideoGame = async (req, res) => {
   const idVideogame = req.params.idVideogame;
 
   try {
     const deletedGame = await Videogame.destroy({
       where: {
         id: idVideogame,
-        origin: 'Database' // Asegura que solo se eliminen juegos locales
+        origin: 'Database' 
       }
     });
 
@@ -212,13 +230,12 @@ const updateVideoGame = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+}; */
 
 module.exports = {
   getVideoGames,
   getVideoGameById,
   searchVideoGamesByName,
   createVideoGame,
-  deleteVideoGame,
-  updateVideoGame
+  getNextPage
 };

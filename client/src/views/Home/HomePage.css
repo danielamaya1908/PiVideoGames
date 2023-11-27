@@ -137,3 +137,23 @@
   border-radius: 4px;
   border-color: #007bff;
 }
+
+.floating-button {
+  position: fixed; /* Posición fija en la pantalla */
+  bottom: 20px;    /* 20px desde el fondo de la pantalla */
+  right: 20px;     /* 20px desde el lado derecho de la pantalla */
+  z-index: 1000;   /* Asegura que el botón se mantenga sobre otros elementos */
+
+  padding: 10px 15px; /* Espaciado interno para hacer el botón más grande */
+  background-color: #007bff; /* Color de fondo del botón */
+  color: white; /* Color del texto */
+  border: none; /* Sin bordes */
+  border-radius: 5px; /* Bordes redondeados */
+
+  cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Sombra para un efecto 3D */
+}
+
+.floating-button:hover {
+  background-color: #0056b3; /* Color cuando el mouse pasa sobre el botón */
+}

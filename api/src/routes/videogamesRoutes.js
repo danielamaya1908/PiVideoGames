@@ -14,11 +14,8 @@ router.get('/:idVideogame', videogamesController.getVideoGameById);
 // Ruta para crear un nuevo videojuego
 router.post('/', videogamesController.createVideoGame);
 
-// Ruta para eliminar un videojuego por su ID
-router.delete('/:idVideogame', videogamesController.deleteVideoGame);
-
-// Ruta para actualizar un videojuego por su ID
-router.put('/:idVideogame', videogamesController.updateVideoGame);
+router.get('/page/:pageNumber', videogamesController.getVideoGames);
+router.get('/next/page/:pageNumber', videogamesController.getNextPage);
 
 
 module.exports = router;

@@ -30,15 +30,7 @@ function App() {
             }
           />
           <Route path="/form" element={<FormPage />} />
-          <Route
-            path="/videogames/:id"
-            element={
-              <>
-                <Navbar /> {/* Aquí agregamos el Navbar */}
-                <DetailPage />
-              </>
-            }
-          />
+          <Route path="/videogames/:id" element={<DetailPage />} />
           <Route
             path="/about"
             element={

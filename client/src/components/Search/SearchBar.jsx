@@ -8,7 +8,16 @@ const SearchBar = ({ handleSearch }) => {
   // Función para manejar la presentación del formulario
   const handleSubmit = (e) => {
     e.preventDefault(); // Previene la recarga de la página al enviar el formulario
-    handleSearch(searchTerm); // Llama a la función handleSearch del componente padre con el término de búsqueda
+    
+    // Validación de caracteres especiales usando una expresión regular
+    const specialCharacters = /[!@#$%^&*(),.?":{}|<>]/;
+    
+    if (specialCharacters.test(searchTerm)) {
+      // Muestra una alerta si se detectan caracteres especiales
+      alert('No se aceptan caracteres especiales en la búsqueda.');
+    } else {
+      handleSearch(searchTerm); // Llama a la función handleSearch del componente padre con el término de búsqueda
+    }
   };
 
   // Renderiza el formulario de búsqueda

@@ -1,34 +1,44 @@
 import React from 'react';
-import "./Pagination.css" 
+import './Pagination.css';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  // Función para renderizar los números de página
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1); // Cambia a la siguiente página si no estamos en la última
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1); // Cambia a la página anterior si no estamos en la primera
+    }
+  };
+
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    // Genera números de página y los agrega a un arreglo
     for (let i = 1; i <= totalPages; i++) {
-      // Crea elementos <li> para cada número de página
       pageNumbers.push(
         <li
           key={i}
           className={currentPage === i ? 'active' : ''}
-          onClick={() => onPageChange(i)} // Maneja el cambio de página al hacer clic
+          onClick={() => onPageChange(i)}
         >
           {i}
         </li>
       );
     }
-    return pageNumbers; // Retorna el arreglo con los números de página
+    return pageNumbers;
   };
 
-  // Renderiza la estructura del componente de paginación
   return (
-    <div className="pagination"> {/* Contenedor principal de la paginación */}
-      <ul className="page-numbers"> {/* Lista de números de página */}
-        {renderPageNumbers()} {/* Renderiza los números de página */}
+    <div className="pagination">
+      <button onClick={handlePrevPage}>{'<'}</button>
+      <ul className="page-numbers">
+        {renderPageNumbers()}
       </ul>
+      <button onClick={handleNextPage}>{'>'}</button>
     </div>
   );
 };
 
-export default Pagination; 
+export default Pagination;

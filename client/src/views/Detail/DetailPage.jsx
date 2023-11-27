@@ -2,41 +2,40 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getGameById } from '../../redux/action';
-import style from "./DetailPage.css";
+import './DetailPage.css';
+
+import Loading from '../../components/Loading/Loading'; 
 
 const Detail = () => {
-  // Obtiene el parámetro de la URL
   const { id } = useParams();
-
-  // Obtiene el estado del juego y el estado de carga del Redux store
   const game = useSelector((state) => state.videoGameDetails);
   const loading = useSelector((state) => state.loading);
-
-  // Permite despachar acciones Redux
   const dispatch = useDispatch();
 
-  // Utiliza useEffect para obtener detalles del juego cuando cambia el ID o se monta el componente
+  // Realiza la llamada a la acción para obtener los detalles del juego
   useEffect(() => {
     dispatch(getGameById(id));
   }, [dispatch, id]);
 
-  // useEffect vacío, se ejecuta cuando cambia el estado del juego
-
-  // Si está cargando, muestra un spinner
+  // Si se está cargando, muestra el componente de carga
   if (loading) {
     return (
-      <div className={style.loadercontainer}>
-        <div className={style.spinner}></div>
+      <div className="detail-container">
+        <Loading />
       </div>
     );
   }
 
-  // Si no se encuentra ningún detalle del juego, muestra un mensaje de error
-  if (!game) {
-    return <p className="error-message">No se encontraron detalles del juego.</p>;
+  // Si no hay detalles de juego o falta el ID, muestra un mensaje de carga o maneja el estado de no disponible
+  if (!game || !game.id) {
+    return (
+      <div className="detail-container">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
-  // Muestra los detalles del juego
+  // Muestra los detalles del juego, plataformas y géneros
   return (
     <div className="detail-container">
       <h1>ID {game.id} - {game.name}</h1>
