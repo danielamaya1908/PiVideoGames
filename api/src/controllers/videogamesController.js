@@ -122,7 +122,7 @@ const getVideoGameById = async (req, res) => {
   }
 };
 
-const searchVideoGamesByName = async (req, res) => {
+/* const searchVideoGamesByName = async (req, res) => {
   const name = req.params.name;
 
   try {
@@ -156,6 +156,53 @@ const searchVideoGamesByName = async (req, res) => {
     res.status(500).json({ message: error.message});
   }
 };
+ */
+const searchVideoGamesByName = async (req, res) => {
+  const name = req.params.name;
+
+  try {
+    const gamesPerPage = 40; // Juegos por página en la API
+    const totalGamesDesired = 100; // Total de juegos deseados
+    
+    let videoGamesFromAPI = [];
+    let currentPage = 1;
+
+    while (videoGamesFromAPI.length < totalGamesDesired) {
+      const response = await axios.get(apiUrl, {
+        params: {
+          key: RAWG_API_KEY,
+          page_size: gamesPerPage,
+          page: currentPage,
+          search: name
+        }
+      });
+
+      if (response.data.results.length === 0) {
+        break; // Si no hay más resultados, salir del bucle
+      }
+
+      videoGamesFromAPI = [...videoGamesFromAPI, ...response.data.results.map(game => ({
+        ...game,
+        origin: 'API'
+      }))];
+
+      currentPage++;
+
+      // Si ya se tienen los 100 juegos, romper el ciclo
+      if (videoGamesFromAPI.length >= totalGamesDesired) {
+        break;
+      }
+    }
+
+    // Limitar a 100 juegos si se supera
+    videoGamesFromAPI = videoGamesFromAPI.slice(0, totalGamesDesired);
+
+    res.json({ results: videoGamesFromAPI });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 //crud
 const createVideoGame = async (req, res) => {
